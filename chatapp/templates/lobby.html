@@ -1,0 +1,57 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content%}
+<main>
+    <section id="form">
+        <img id='logo' src="{% static 'images/video-chat.png' %}" alt="">
+        <div id="welcom-msg">
+            <h1>welcome to Chatroom!</h1>
+            <p>you can spend more time with your friends here!</p>
+        </div>
+        <form action="" id="details">
+            <div class="f1">
+                <label>Room</label>
+                <input type="text" name="room" placeholder="Enter a room name..." style="text-transform:uppercase;">
+            </div>
+
+            <div class="f1">
+                <label>Name</label>
+                <input type="text" name="username" placeholder="Enter Username..." style="text-transform:uppercase;">
+            </div>
+
+            <div class="f1">
+                <input type="submit" value="Join Stream">
+            </div>
+        </form>
+
+
+    </section>
+
+
+
+</main>
+
+<script type="text/javascript">
+    let details = document.getElementById('details')
+
+    let submitaction = async (e) => {
+        e.preventDefault()
+        let room=e.target.room.value.toUpperCase()
+        let name=e.target.username.value.toUpperCase()
+
+        let response=await fetch(`/get_token/?channel=${room}`)
+        let data=await response.json()
+
+        let UID=data.uid
+        let token=data.token
+
+        sessionStorage.setItem('UID',UID)
+        sessionStorage.setItem('token',token)
+        sessionStorage.setItem('room',room)
+        sessionStorage.setItem('name',name)
+        window.open('/room/', '_self')
+    }
+
+    details.addEventListener('submit', submitaction)
+</script>
+{% endblock content%}
